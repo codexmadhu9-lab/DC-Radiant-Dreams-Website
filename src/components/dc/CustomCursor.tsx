@@ -20,7 +20,7 @@ export function CustomCursor() {
       y = e.clientY;
       setVisible(true);
       const target = (e.target as HTMLElement)?.closest?.("[data-cursor]") as HTMLElement | null;
-      setLabel(target ? target.dataset.cursor || null : null);
+      setLabel(target ? target.dataset['cursor'] || null : null);
     };
 
     const tick = () => {

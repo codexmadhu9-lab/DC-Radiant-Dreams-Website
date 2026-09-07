@@ -28,7 +28,7 @@ export function useDcScrollAnimations() {
               y: 0,
               duration: 1,
               ease: "power3.out",
-              delay: Number(el.dataset.revealDelay ?? 0),
+              delay: Number(el.dataset['revealDelay'] ?? 0),
               scrollTrigger: { trigger: el, start: "top 88%", once: true },
             },
           );
