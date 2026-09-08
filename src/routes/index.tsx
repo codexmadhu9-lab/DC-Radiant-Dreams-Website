@@ -1,4 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Navbar } from "@/components/dc/Navbar";
+import { HeroVideo } from "@/components/dc/HeroVideo";
+import { CustomCursor } from "@/components/dc/CustomCursor";
+import { ShopProvider } from "@/components/dc/ShopProvider";
+import {
+  BestSellerSection,
+  CategorySection,
+  CollectionSection,
+  DCExperience,
+  EditorialSection,
+  Footer,
+  InstagramGallery,
+  NewArrivalsSection,
+  Newsletter,
+  OccasionSection,
+  StoreLocator,
+  StorySection,
+  TrustSection,
+} from "@/components/dc/sections";
+import { Marquee } from "@/components/dc/Marquee";
+import { useDcScrollAnimations } from "@/lib/use-reveal";
 
 // No head() here: the home route inherits title/description/og/twitter from
 // __root.tsx, and ships no og:image so serve-time hosting can inject the
@@ -7,18 +28,32 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  useDcScrollAnimations();
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
+    <ShopProvider><main>
+      <CustomCursor />
+      <Navbar />
+      <HeroVideo />
+      <Marquee
+        items={["Certified Diamonds", "Hallmarked Gold", "Lifetime Care", "Complimentary Shipping"]}
+        className="border-y border-gold/30 bg-white py-4"
+        itemClassName="text-[0.6rem] uppercase tracking-[0.32em] text-navy"
       />
-    </div>
+      <CategorySection />
+      <CollectionSection />
+      <EditorialSection />
+      <NewArrivalsSection />
+      <BestSellerSection />
+      <OccasionSection />
+      <StorySection />
+      <DCExperience />
+      <TrustSection />
+      <StoreLocator />
+      <InstagramGallery />
+      <Newsletter />
+      <Footer logoUrl="/logo.jpg" />
+    </main></ShopProvider>
   );
 }

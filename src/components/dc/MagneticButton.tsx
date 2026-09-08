@@ -5,6 +5,7 @@ type Props = {
   variant?: "glass" | "solid" | "outline";
   className?: string;
   onClick?: () => void;
+  type?: "button" | "submit";
 };
 
 const variants = {
@@ -14,7 +15,7 @@ const variants = {
   outline: "border border-navy/25 text-navy hover:border-gold hover:text-royal",
 };
 
-export function MagneticButton({ children, variant = "glass", className = "", onClick }: Props) {
+export function MagneticButton({ children, variant = "glass", className = "", onClick, type = "button" }: Props) {
   const ref = useRef<HTMLButtonElement>(null);
 
   const move = (e: React.MouseEvent) => {
@@ -36,6 +37,7 @@ export function MagneticButton({ children, variant = "glass", className = "", on
       ref={ref}
       data-cursor="explore"
       onClick={onClick}
+      type={type}
       onMouseMove={move}
       onMouseLeave={reset}
       className={`shine-sweep inline-flex items-center justify-center px-8 py-4 text-[0.68rem] font-medium uppercase tracking-[0.28em] transition-[transform,color,border-color,background-color] duration-300 ease-out ${variants[variant]} ${className}`}

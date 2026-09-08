@@ -88,7 +88,12 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 8rem;
   }
+
+  button, a { -webkit-tap-highlight-color: transparent; }
+  button:not(:disabled), a { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--royal); outline-offset: 4px; }
 
   body {
     background-color: var(--color-background);
@@ -103,6 +108,11 @@
   .font-display {
     font-family: var(--font-display);
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .marquee-track, .marquee-track-reverse { animation: none; }
 }
 
 /* ---------- Marquees ---------- */
@@ -217,9 +227,3 @@
   border-radius: 999px;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .dc-cursor-none,
-  .dc-cursor-none * {
-    cursor: none !important;
-  }
-}

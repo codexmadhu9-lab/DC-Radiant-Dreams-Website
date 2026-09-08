@@ -1,15 +1,10 @@
 import { MagneticButton } from "./MagneticButton";
-import poster from "@/assets/story-bg.jpg";
 
-/**
- * Replace /hero/dc-hero.mp4 with the brand film once uploaded.
- * The poster keeps the hero cinematic until the video is in place.
- */
-export const HERO_VIDEO_SRC = "/hero/dc-hero.mp4";
+export const HERO_VIDEO_SRC = "/hero/dc_hero.mp4";
 
 export function HeroVideo() {
   return (
-    <section id="top" className="relative h-[100svh] w-full overflow-hidden">
+    <section id="top" className="relative h-[100svh] w-full overflow-hidden bg-navy">
       <video
         className="absolute inset-0 h-full w-full origin-center scale-105 animate-[dc-zoom_24s_ease-in-out_infinite_alternate] object-cover"
         autoPlay
@@ -17,7 +12,6 @@ export function HeroVideo() {
         loop
         playsInline
         preload="metadata"
-        poster={poster}
       >
         <source src={HERO_VIDEO_SRC} type="video/mp4" />
       </video>
@@ -41,8 +35,10 @@ export function HeroVideo() {
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <MagneticButton variant="glass">Explore Collection</MagneticButton>
-          <MagneticButton variant="glass" className="border-gold/70 text-champagne">
+          <MagneticButton variant="glass" onClick={() => document.querySelector("#collections")?.scrollIntoView({ behavior: "smooth" })}>
+            Explore Collection
+          </MagneticButton>
+          <MagneticButton variant="glass" className="border-gold/70 text-champagne" onClick={() => document.querySelector("#experience")?.scrollIntoView({ behavior: "smooth" })}>
             Discover DC
           </MagneticButton>
         </div>

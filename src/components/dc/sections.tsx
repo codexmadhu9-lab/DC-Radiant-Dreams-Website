@@ -4,6 +4,8 @@ import { LuGem, LuShieldCheck, LuBadgeCheck, LuSparkles, LuRefreshCw, LuHandHear
 import { MagneticButton } from "./MagneticButton";
 import { CoverflowCarousel } from "./CoverflowCarousel";
 import { Marquee } from "./Marquee";
+import { products, formatPrice, photo, type Product } from "./catalog";
+import { useShop } from "./ShopProvider";
 
 import rings from "@/assets/cat-rings.jpg";
 import earrings from "@/assets/cat-earrings.jpg";
@@ -59,16 +61,17 @@ const categories = [
   { name: "Rings", img: rings },
   { name: "Earrings", img: earrings },
   { name: "Necklaces", img: necklaces },
-  { name: "Pendants", img: everyday },
-  { name: "Bracelets", img: goldCol },
+  { name: "Pendants", img: photo("category-pendants") },
+  { name: "Bracelets", img: photo("category-bracelets") },
   { name: "Bangles", img: bangles },
-  { name: "Chains", img: necklaces },
-  { name: "Mangalsutra", img: festive },
+  { name: "Chains", img: photo("category-chains") },
+  { name: "Bridal Jewellery", img: festive },
 ];
 
 export function CategorySection() {
+  const shop = useShop();
   return (
-    <section className="bg-white py-24 lg:py-32">
+    <section id="jewellery" className="scroll-mt-20 bg-white py-24 lg:py-32">
       <div className="mx-auto max-w-[1500px] px-5 lg:px-10">
         <SectionHeading
           eyebrow="Shop by category"
@@ -77,12 +80,12 @@ export function CategorySection() {
         />
         <div className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-6">
           {categories.map((c, i) => (
-            <article
+            <button type="button" onClick={() => shop.browse(c.name)}
               key={c.name}
               data-reveal
               data-reveal-delay={(i % 4) * 0.08}
               data-cursor="view"
-              className="group relative aspect-[3/4.4] overflow-hidden bg-mist"
+              className="group relative block w-full text-left aspect-[3/4.4] overflow-hidden bg-mist"
             >
               <img
                 src={c.img}
@@ -98,7 +101,7 @@ export function CategorySection() {
                   Explore <FiArrowRight />
                 </p>
               </div>
-            </article>
+            </button>
           ))}
         </div>
       </div>
@@ -112,13 +115,14 @@ const collections = [
   { name: "Diamond Stories", desc: "Brilliance cut to catch every glance.", img: diamond },
   { name: "Timeless Gold", desc: "Classic karats, reimagined for today.", img: goldCol },
   { name: "Everyday Elegance", desc: "Light, wearable pieces for daily rituals.", img: everyday },
-  { name: "Festive Glamour", desc: "Statement jewels for the season of light.", img: festive },
-  { name: "Modern Classics", desc: "Architectural lines with a soft finish.", img: necklaces },
+  { name: "Festive Glamour", desc: "Statement jewels for the season of light.", img: photo("collection-festive") },
+  { name: "Modern Classics", desc: "Architectural lines with a soft finish.", img: photo("collection-modern") },
 ];
 
 export function CollectionSection() {
+  const shop = useShop();
   return (
-    <section className="bg-navy py-24 lg:py-32">
+    <section id="collections" className="scroll-mt-20 bg-navy py-24 lg:py-32">
       <div className="mx-auto max-w-[1600px] px-5 lg:px-10">
         <SectionHeading
           light
@@ -130,7 +134,7 @@ export function CollectionSection() {
           <CoverflowCarousel
             items={collections}
             render={(c) => (
-              <article className="group relative aspect-[3/4.2] overflow-hidden border border-gold/40" data-cursor="view">
+              <button type="button" onClick={() => shop.browse(c.name)} className="group relative block w-full text-left aspect-[3/4.2] overflow-hidden border border-gold/40" data-cursor="view">
                 <img src={c.img} alt={c.name} loading="lazy" className="h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-linear-to-t from-navy via-navy/25 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-6">
@@ -140,7 +144,7 @@ export function CollectionSection() {
                     Explore Collection <FiArrowRight />
                   </p>
                 </div>
-              </article>
+              </button>
             )}
           />
         </div>
@@ -152,7 +156,7 @@ export function CollectionSection() {
 /* ---------------- 9. Editorial split ---------------- */
 export function EditorialSection() {
   return (
-    <section className="overflow-hidden bg-mist py-24 lg:py-32">
+    <section id="about" className="scroll-mt-20 overflow-hidden bg-mist py-24 lg:py-32">
       <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-5 lg:grid-cols-2 lg:gap-20 lg:px-10">
         <div className="relative aspect-[4/5] overflow-hidden" data-cursor="view" data-reveal>
           <img
@@ -175,7 +179,7 @@ export function EditorialSection() {
             part of your story.
           </p>
           <div className="mt-9">
-            <MagneticButton variant="solid">Explore Jewellery</MagneticButton>
+            <MagneticButton variant="solid" onClick={() => document.querySelector("#products")?.scrollIntoView({ behavior: "smooth" })}>Explore Jewellery</MagneticButton>
           </div>
         </div>
       </div>
@@ -184,20 +188,10 @@ export function EditorialSection() {
 }
 
 /* ---------------- 10 & 12. Products ---------------- */
-type Product = { name: string; price: string; img: string; alt: string; tag: string };
-
-const products: Product[] = [
-  { name: "Aurelia Solitaire Ring", price: "₹ 84,500", img: rings, alt: "Diamond solitaire ring", tag: "DIAMOND" },
-  { name: "Celeste Drop Earrings", price: "₹ 46,900", img: earrings, alt: "Gold chandelier earrings", tag: "GOLD" },
-  { name: "Lumina Pendant Chain", price: "₹ 32,400", img: necklaces, alt: "Gold pendant necklace", tag: "EVERYDAY" },
-  { name: "Rani Heritage Bangles", price: "₹ 1,24,000", img: bangles, alt: "Gold bangles", tag: "BRIDAL" },
-  { name: "Nova Diamond Halo", price: "₹ 98,700", img: diamond, alt: "Diamond halo ring", tag: "DIAMOND" },
-  { name: "Soleil Layered Chains", price: "₹ 28,900", img: goldCol, alt: "Layered gold chains", tag: "GOLD" },
-  { name: "Aria Minimal Pendant", price: "₹ 18,600", img: everyday, alt: "Minimal gold pendant", tag: "EVERYDAY" },
-  { name: "Utsav Festive Set", price: "₹ 1,56,000", img: festive, alt: "Festive gold jewellery set", tag: "BRIDAL" },
-];
-
 function ProductCard({ p }: { p: Product }) {
+  const shop = useShop();
+  const wishlisted = shop.wishlist.includes(p.id);
+
   return (
     <article className="group flex h-full flex-col bg-white" data-cursor="view">
       <div className="shine-sweep relative aspect-[4/5] overflow-hidden bg-mist">
@@ -208,20 +202,22 @@ function ProductCard({ p }: { p: Product }) {
           className="h-full w-full object-cover transition-transform duration-[1.2s] group-hover:scale-110"
         />
         <button
-          aria-label="Add to wishlist"
-          className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/80 text-navy backdrop-blur transition-colors hover:bg-gold hover:text-white"
+          aria-label={`${wishlisted ? "Remove" : "Add"} ${p.name} ${wishlisted ? "from" : "to"} wishlist`}
+          aria-pressed={wishlisted}
+          onClick={() => shop.toggleWish(p.id)}
+          className={`absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full backdrop-blur transition-colors ${wishlisted ? "bg-gold text-white" : "bg-white/80 text-navy hover:bg-gold hover:text-white"}`}
         >
           <FiHeart />
         </button>
-        <div className="absolute inset-x-0 bottom-0 translate-y-full bg-navy/90 py-3 text-center text-[0.58rem] uppercase tracking-[0.3em] text-white transition-transform duration-500 group-hover:translate-y-0">
+        <button type="button" onClick={() => shop.quickView(p)} aria-label={`Quick view ${p.name}`} className="absolute inset-x-0 bottom-0 bg-navy/90 py-3 text-center text-[0.58rem] uppercase tracking-[0.3em] text-white transition-transform duration-500 group-hover:translate-y-0">
           Quick View
-        </div>
+        </button>
       </div>
       <div className="flex flex-1 flex-col px-1 pt-5">
         <p className="text-[0.55rem] uppercase tracking-[0.3em] text-royal">{p.tag}</p>
         <h3 className="mt-2 font-display text-lg text-navy">{p.name}</h3>
-        <p className="mt-1 text-sm text-muted-foreground">{p.price}</p>
-        <button className="mt-4 w-full border border-navy/20 py-3 text-[0.58rem] uppercase tracking-[0.3em] text-navy transition-colors hover:border-gold hover:bg-navy hover:text-white">
+        <p className="mt-1 text-sm text-muted-foreground">{formatPrice(p.price)}</p>
+        <button onClick={() => shop.add(p.id)} className="mt-4 w-full border border-navy/20 py-3 text-[0.58rem] uppercase tracking-[0.3em] text-navy transition-colors hover:border-gold hover:bg-navy hover:text-white">
           Add to Bag
         </button>
       </div>
@@ -231,11 +227,11 @@ function ProductCard({ p }: { p: Product }) {
 
 export function NewArrivalsSection() {
   return (
-    <section className="bg-white py-24 lg:py-32">
+    <section id="products" className="scroll-mt-20 bg-white py-24 lg:py-32">
       <div className="mx-auto max-w-[1600px] px-5 lg:px-10">
         <SectionHeading eyebrow="Just landed" title="New Arrivals" subtitle="This week's most-wanted pieces." />
         <div className="mt-14" data-reveal>
-          <CoverflowCarousel items={products} render={(p) => <ProductCard p={p} />} />
+          <CoverflowCarousel items={products.slice(0, 4)} render={(p) => <ProductCard p={p} />} />
         </div>
       </div>
     </section>
@@ -246,10 +242,10 @@ const tabs = ["ALL", "GOLD", "DIAMOND", "BRIDAL", "EVERYDAY"] as const;
 
 export function BestSellerSection() {
   const [tab, setTab] = useState<(typeof tabs)[number]>("ALL");
-  const filtered = tab === "ALL" ? products : products.filter((p) => p.tag === tab);
+  const filtered = tab === "ALL" ? products.slice(4) : products.slice(4).filter((p) => p.tag === tab);
 
   return (
-    <section className="bg-mist py-24 lg:py-32">
+    <section id="best-sellers" className="scroll-mt-20 bg-mist py-24 lg:py-32">
       <div className="mx-auto max-w-[1500px] px-5 lg:px-10">
         <SectionHeading eyebrow="Loved by many" title="Best Sellers" />
         <div className="mt-10 flex flex-wrap justify-center gap-2" data-reveal>
@@ -257,6 +253,7 @@ export function BestSellerSection() {
             <button
               key={t}
               onClick={() => setTab(t)}
+              aria-pressed={tab === t}
               className={`px-6 py-3 text-[0.58rem] uppercase tracking-[0.3em] transition-all duration-300 ${
                 tab === t ? "bg-navy text-white" : "text-navy hover:text-royal"
               }`}
@@ -279,17 +276,18 @@ export function BestSellerSection() {
 
 /* ---------------- 13. Occasions ---------------- */
 const occasions = [
-  { name: "Wedding", img: wedding },
-  { name: "Engagement", img: rings },
-  { name: "Anniversary", img: diamond },
-  { name: "Birthday", img: earrings },
-  { name: "Festive", img: festive },
-  { name: "Everyday", img: everyday },
+  { name: "Wedding", img: photo("occasion-wedding") },
+  { name: "Engagement", img: photo("occasion-engagement") },
+  { name: "Anniversary", img: photo("occasion-anniversary") },
+  { name: "Birthday", img: photo("occasion-birthday") },
+  { name: "Festive", img: photo("occasion-festive") },
+  { name: "Everyday", img: photo("occasion-everyday") },
 ];
 
 export function OccasionSection() {
+  const shop = useShop();
   return (
-    <section className="bg-white py-24 lg:py-32">
+    <section id="gifting" className="scroll-mt-20 bg-white py-24 lg:py-32">
       <div className="mx-auto max-w-[1600px] px-5 lg:px-10">
         <SectionHeading eyebrow="Shop by occasion" title="For Every Celebration" />
         <div className="mt-14" data-reveal>
@@ -297,7 +295,7 @@ export function OccasionSection() {
             items={occasions}
             autoplay={false}
             render={(o) => (
-              <article className="group relative aspect-[3/4] overflow-hidden" data-cursor="view">
+              <button type="button" onClick={() => shop.browse(o.name)} className="group relative block w-full text-left aspect-[3/4] overflow-hidden" data-cursor="view">
                 <img
                   src={o.img}
                   alt={o.name}
@@ -308,7 +306,7 @@ export function OccasionSection() {
                 <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-navy/90 to-transparent p-6">
                   <h3 className="font-display text-2xl uppercase tracking-wide text-white">{o.name}</h3>
                 </div>
-              </article>
+              </button>
             )}
           />
         </div>
@@ -332,7 +330,7 @@ export function StorySection() {
           Designed to celebrate moments that deserve to shine forever.
         </p>
         <div className="mt-10" data-reveal>
-          <MagneticButton variant="glass">Discover the Story</MagneticButton>
+          <MagneticButton variant="glass" onClick={() => document.querySelector("#about")?.scrollIntoView({ behavior: "smooth" })}>Discover the Story</MagneticButton>
         </div>
       </div>
     </section>
@@ -343,16 +341,16 @@ export function StorySection() {
 const experiences = [
   { name: "Fashion", copy: "Global labels and homegrown couture under one roof." },
   { name: "Jewellery", copy: "The DC flagship atelier and diamond salon." },
-  { name: "Beauty", copy: "Fragrance, skincare and styling suites." },
+  
   { name: "Lifestyle", copy: "Home, tech and design boutiques." },
-  { name: "Dining", copy: "Rooftop restaurants and a patisserie court." },
-  { name: "Entertainment", copy: "Premium screens, arcades and family zones." },
+ 
   { name: "Events", copy: "Launches, showcases and seasonal festivals." },
 ];
 
 export function DCExperience() {
+  const shop = useShop();
   return (
-    <section data-horizontal-wrap className="overflow-hidden bg-navy py-20 lg:py-24">
+    <section id="experience" data-horizontal-wrap className="scroll-mt-20 overflow-hidden bg-navy py-20 lg:py-24">
       <div className="mx-auto max-w-[1400px] px-5 lg:px-10">
         <SectionHeading light eyebrow="More than jewellery" title="The DC Experience" />
       </div>
@@ -365,8 +363,8 @@ export function DCExperience() {
               data-cursor="view"
             >
               <img
-                src={mall}
-                alt={`DC mall ${e.name.toLowerCase()} zone`}
+                src={e.name === "Jewellery" ? mall : photo(`experience-${e.name.toLowerCase()}`)}
+                alt={`${e.name} inspiration`}
                 loading="lazy"
                 className="h-full w-full object-cover opacity-60 transition-all duration-[1.4s] group-hover:scale-110 group-hover:opacity-90"
               />
@@ -377,6 +375,7 @@ export function DCExperience() {
                 </p>
                 <h3 className="mt-3 font-display text-3xl text-white">{e.name}</h3>
                 <p className="mt-3 max-w-xs text-xs font-light leading-relaxed text-white/70">{e.copy}</p>
+                <button className="mt-5 text-xs uppercase tracking-widest text-champagne underline underline-offset-4" onClick={() => shop.info(e.name, `${e.copy}\n\nPlan your visit with a DC store. Contact the team for current brands, opening times and availability.`)}>Explore {e.name}</button>
               </div>
             </article>
           ))}
@@ -428,20 +427,28 @@ const stores = [
 ];
 
 export function StoreLocator() {
+  const [query, setQuery] = useState("");
+  const matchingStores = stores.filter((store) =>
+    `${store.city} ${store.name} ${store.address}`.toLowerCase().includes(query.trim().toLowerCase()),
+  );
+
   return (
-    <section className="bg-mist py-24 lg:py-32">
+    <section id="contact" className="scroll-mt-20 bg-mist py-24 lg:py-32">
       <div className="mx-auto max-w-[1300px] px-5 lg:px-10">
         <SectionHeading eyebrow="Store locator" title="Visit DC" subtitle="Experience the craft in person." />
         <div className="mx-auto mt-10 flex max-w-xl flex-col gap-3 sm:flex-row" data-reveal>
           <input
             type="text"
+            aria-label="Search city or area"
             placeholder="Search city or area"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
             className="min-w-0 flex-1 border border-navy/15 bg-white px-5 py-4 text-sm outline-none transition-colors focus:border-gold"
           />
-          <MagneticButton variant="solid" className="shrink-0">Find your nearest DC</MagneticButton>
+          <MagneticButton variant="solid" className="shrink-0" onClick={() => document.querySelector("#store-results")?.scrollIntoView({ behavior: "smooth", block: "center" })}>Find your nearest DC</MagneticButton>
         </div>
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {stores.map((s, i) => (
+        <div id="store-results" className="mt-14 grid scroll-mt-28 gap-6 lg:grid-cols-3">
+          {matchingStores.map((s, i) => (
             <article key={s.name} data-reveal data-reveal-delay={i * 0.08} className="border border-navy/10 bg-white p-8">
               <p className="text-[0.55rem] uppercase tracking-[0.4em] text-royal">{s.city}</p>
               <h3 className="mt-4 font-display text-xl text-navy">{s.name}</h3>
@@ -449,43 +456,54 @@ export function StoreLocator() {
               <ul className="space-y-3 text-xs font-light text-muted-foreground">
                 <li className="flex gap-3"><FiMapPin className="mt-0.5 shrink-0 text-gold" />{s.address}</li>
                 <li className="flex gap-3"><FiClock className="mt-0.5 shrink-0 text-gold" />{s.hours}</li>
-                <li className="flex gap-3"><FiPhone className="mt-0.5 shrink-0 text-gold" />{s.phone}</li>
+                <li className="flex gap-3"><FiPhone className="mt-0.5 shrink-0 text-gold" /><a href={`tel:${s.phone.replace(/\s/g, "")}`}>{s.phone}</a></li>
               </ul>
-              <button className="mt-7 inline-flex items-center gap-2 text-[0.58rem] uppercase tracking-[0.3em] text-navy transition-colors hover:text-royal">
+              <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.address)}`} target="_blank" rel="noreferrer" className="mt-7 inline-flex items-center gap-2 text-[0.58rem] uppercase tracking-[0.3em] text-navy transition-colors hover:text-royal">
                 Directions <FiArrowRight />
-              </button>
+              </a>
             </article>
           ))}
         </div>
+        {matchingStores.length === 0 ? <p className="mt-8 text-center text-sm text-muted-foreground">No DC store matches that search yet.</p> : null}
       </div>
     </section>
   );
 }
 
 /* ---------------- 18. Instagram ---------------- */
-const gallery = [rings, earrings, necklaces, bangles, diamond, goldCol, festive, everyday];
+const gallery = [
+  { img: photo("journal-bridal"), title: "The bridal edit", text: "Build your look around one statement piece, then balance it with complementary earrings. Bring a fabric swatch to your styling appointment to explore colours together." },
+  { img: photo("journal-tradition"), title: "A touch of tradition", text: "Pair heirloom jewellery with a simple neckline to let the craftsmanship stand out. Store individual pieces separately to protect their surfaces." },
+  { img: photo("journal-colour"), title: "Celebrate in colour", text: "Use one accent colour to connect your jewellery with your outfit. Try different combinations in person to see how they catch the light." },
+  { img: photo("journal-heritage"), title: "Details to remember", text: "Consider your neckline, hairstyle and comfort when choosing a celebration look. Bring photographs of your outfit to help the store team suggest pairings." },
+  { img: photo("journal-silver"), title: "A little brilliance", text: "A delicate pair of earrings can add a finishing touch to an everyday look. Keep pieces away from perfumes and harsh cleaners." },
+  { img: photo("journal-minimal"), title: "Less, beautifully", text: "A single bracelet gives a clean silhouette. Try the fit with your wrist relaxed and allow comfortable movement." },
+  { img: photo("journal-mixed"), title: "Mix your metals", text: "Repeat a metal tone in two places for a balanced look. Leave a little space between bracelets to reduce rubbing." },
+  { img: photo("journal-layering"), title: "The art of layering", text: "Choose necklaces of different lengths so each pendant has room to shine. Untangle and store chains individually after wearing." },
+];
 
 export function InstagramGallery() {
+  const shop = useShop();
   return (
     <section className="bg-white py-24 lg:py-32">
       <div className="mx-auto max-w-[1600px] px-5 lg:px-10">
-        <SectionHeading eyebrow="@dcjewellery" title="The DC Journal" subtitle="Follow the shine." />
+        <SectionHeading eyebrow="Style & inspiration" title="The DC Journal" subtitle="Follow the shine." />
         <div className="mt-14 grid grid-cols-2 gap-2 md:grid-cols-4">
           {gallery.map((g, i) => (
-            <a
+            <button type="button"
               key={i}
-              href="#top"
+              onClick={() => shop.info(g.title, g.text)}
               data-cursor="view"
               data-reveal
               data-reveal-delay={(i % 4) * 0.06}
               className="group relative aspect-square overflow-hidden"
             >
-              <img src={g} alt="DC jewellery social post" loading="lazy" className="h-full w-full object-cover transition-transform duration-[1.2s] group-hover:scale-110" />
+              <img src={g.img} alt={g.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1.2s] group-hover:scale-110" />
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-navy/70 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                <FiInstagram className="text-2xl text-champagne" />
-                <span className="text-[0.55rem] uppercase tracking-[0.3em] text-white">View</span>
+                <FiArrowRight className="text-2xl text-champagne" />
+                <span className="text-[0.55rem] uppercase tracking-[0.3em] text-white">{g.title}</span>
               </div>
-            </a>
+            </button>
           ))}
         </div>
       </div>
@@ -498,23 +516,9 @@ export function Newsletter() {
   return (
     <section className="bg-navy py-24 lg:py-28">
       <div className="mx-auto max-w-2xl px-5 text-center lg:px-10">
-        <SectionHeading light eyebrow="Newsletter" title="Stay In The Glow" />
-        <p className="mt-6 text-sm font-light leading-loose text-white/70" data-reveal>
-          Be the first to discover new collections, exclusive launches and special moments.
-        </p>
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          className="mt-10 flex flex-col gap-3 sm:flex-row"
-          data-reveal
-        >
-          <input
-            type="email"
-            required
-            placeholder="Your email address"
-            className="min-w-0 flex-1 border border-white/25 bg-transparent px-5 py-4 text-sm text-white placeholder:text-white/40 outline-none transition-colors focus:border-gold"
-          />
-          <MagneticButton variant="glass" className="shrink-0 border-gold text-champagne">Join DC</MagneticButton>
-        </form>
+        <SectionHeading light eyebrow="Keep in touch" title="Stay In The Glow" />
+        <p className="mt-6 text-sm font-light leading-loose text-white/70">Discover new collections and find your next favourite with the DC team.</p>
+        <div className="mt-10"><MagneticButton variant="glass" onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}>Connect with a store</MagneticButton></div>
       </div>
     </section>
   );
@@ -524,27 +528,24 @@ export function Newsletter() {
 const footerCols = [
   { title: "Shop", links: ["Rings", "Earrings", "Necklaces", "Bangles", "Chains"] },
   { title: "Collections", links: ["New Arrivals", "Wedding", "Diamond", "Festive", "Everyday"] },
-  { title: "DC Mall", links: ["Fashion", "Beauty", "Dining", "Entertainment", "Events"] },
+  { title: "DC Mall", links: ["Fashion",  "Events"] },
   { title: "About DC", links: ["Our Story", "Craftsmanship", "Careers", "Press", "Sustainability"] },
   { title: "Customer Care", links: ["Track Order", "Returns", "Care Guide", "Size Guide", "FAQs"] },
   { title: "Contact", links: ["care@dcjewellery.com", "+91 90000 11122", "Banjara Hills, Hyderabad"] },
 ];
 
 export function Footer({ logoUrl }: { logoUrl: string }) {
+  const shop = useShop();
   return (
     <footer className="bg-navy pb-10 pt-20 text-white">
       <div className="mx-auto max-w-[1500px] px-5 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_3fr]">
           <div>
-            <img src={logoUrl} alt="DC Shopping Mall & Jewellery" className="h-24 w-auto brightness-0 invert" loading="lazy" />
+            <img src={logoUrl} alt="DC Shopping Mall & Jewellery" className="h-24 w-24 rounded-full object-cover" loading="lazy" />
             <p className="mt-6 max-w-xs text-xs font-light leading-loose text-white/60">
               Shop. Shine. Belong. A shopping mall and jewellery house built around the moments that matter.
             </p>
-            <div className="mt-7 flex gap-4 text-lg text-white/70">
-              <a href="#top" aria-label="Instagram" className="transition-colors hover:text-gold"><FiInstagram /></a>
-              <a href="#top" aria-label="Facebook" className="transition-colors hover:text-gold"><FiFacebook /></a>
-              <a href="#top" aria-label="YouTube" className="transition-colors hover:text-gold"><FiYoutube /></a>
-            </div>
+            <a href="#contact" className="mt-7 inline-block text-sm text-champagne underline">Connect with DC</a>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-6">
             {footerCols.map((col) => (
@@ -553,9 +554,11 @@ export function Footer({ logoUrl }: { logoUrl: string }) {
                 <ul className="mt-5 space-y-3">
                   {col.links.map((l) => (
                     <li key={l}>
-                      <a href="#top" className="text-xs font-light text-white/65 transition-colors hover:text-white">
-                        {l}
-                      </a>
+                      <button type="button" onClick={() => {
+                        if (col.title === "Shop" || col.title === "Collections") shop.browse(l);
+                        else if (col.title === "Contact") document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
+                        else shop.info(l, col.title === "DC Mall" ? "Explore the DC experience and contact a store for current brands, events and opening times." : l === "Care Guide" ? "Store jewellery separately in a soft pouch. Avoid contact with perfume, chlorine and harsh cleaners. Ask the store about care appropriate for your particular gemstone and setting." : l === "Size Guide" ? "For an accurate fit, visit a store to have your ring or wrist size measured. Bring an existing piece that fits well, and let the team know whether you prefer a close or relaxed fit." : l === "Track Order" ? "Please contact the store where you placed your order with your order reference. Online order tracking is not available here yet." : "Contact the DC team for information about " + l.toLowerCase() + ". The store can answer your questions and provide the current details.");
+                      }} className="text-left text-xs font-light text-white/65 transition-colors hover:text-white">{l}</button>
                     </li>
                   ))}
                 </ul>

@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, EffectCoverflow, Pagination } from "swiper/modules";
+import { A11y, Autoplay, EffectCoverflow, Keyboard, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
@@ -15,20 +15,21 @@ export function CoverflowCarousel<T>({ items, render, autoplay = true }: Props<T
   return (
     <Swiper
       className="dc-coverflow !pb-16"
-      modules={[EffectCoverflow, Pagination, Autoplay]}
+      modules={[EffectCoverflow, Pagination, Autoplay, Keyboard, A11y]}
       effect="coverflow"
       centeredSlides
-      loop
+      rewind
+      keyboard={{ enabled: true, onlyInViewport: true }}
       grabCursor
       speed={800}
-      autoplay={autoplay ? { delay: 3800, disableOnInteraction: false } : false}
+      autoplay={autoplay ? { delay: 3800, disableOnInteraction: true, pauseOnMouseEnter: true } : false}
       pagination={{ clickable: true }}
       coverflowEffect={{ rotate: 18, stretch: 0, depth: 200, modifier: 1.5, scale: 0.9, slideShadows: false }}
       slidesPerView={1.25}
       breakpoints={{
         640: { slidesPerView: 1.6 },
-        768: { slidesPerView: 3 },
-        1280: { slidesPerView: 5 },
+        768: { slidesPerView: Math.min(items.length, 3) },
+        1280: { slidesPerView: Math.min(items.length, 5) },
       }}
     >
       {items.map((item, i) => (

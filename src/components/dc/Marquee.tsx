@@ -24,7 +24,7 @@ export function Marquee({
         style={{ ["--marquee-duration" as string]: `${duration}s` }}
       >
         {loop.map((item, i) => (
-          <span key={`${item}-${i}`} className={`flex shrink-0 items-center ${itemClassName}`}>
+          <span key={`${item}-${i}`} aria-hidden={i >= items.length ? true : undefined} className={`flex shrink-0 items-center ${itemClassName}`}>
             <span className="whitespace-nowrap">{item}</span>
             <span className="mx-6 text-gold sm:mx-10">{separator}</span>
           </span>
